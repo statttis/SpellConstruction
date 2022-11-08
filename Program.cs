@@ -183,7 +183,7 @@ namespace SpellConstruction
                         var recipe = GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"ArmorConstruction{i}{armor.Record.EditorID}");
                         recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(armor.Record) } });
                         recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(armor.Record)));
-                        recipe.Conditions.Add(GetObjectEffectKnownCondition((IFormLink<IObjectEffectGetter>)armor.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache).BaseEnchantment));
+                        recipe.Conditions.Add(GetObjectEffectKnownCondition(armor.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
                     }
 
                     count++;
@@ -262,7 +262,7 @@ namespace SpellConstruction
                         var recipe = GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"WeaponConstruction{i}{weapon.Record.EditorID}");
                         recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(weapon.Record) } });
                         recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(weapon.Record)));
-                        recipe.Conditions.Add(GetObjectEffectKnownCondition((IFormLink<IObjectEffectGetter>)weapon.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache).BaseEnchantment));
+                        recipe.Conditions.Add(GetObjectEffectKnownCondition(weapon.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
                     }
 
                     count++;
@@ -730,8 +730,18 @@ namespace SpellConstruction
             }
         }
 
-        public static ConditionFloat GetObjectEffectKnownCondition(IFormLink<IObjectEffectGetter> effect)
+        public static ConditionFloat GetObjectEffectKnownCondition(IObjectEffectGetter enchantment)
         {
+            IFormLink<IEffectRecordGetter> effect;
+            if (!enchantment.BaseEnchantment.IsNull)
+            {
+                effect = enchantment.BaseEnchantment.Cast<IEffectRecordGetter>();
+            }
+            else
+            {
+                effect = enchantment.ToLink();
+            }
+
             var condition = new ConditionFloat();
             condition.CompareOperator = CompareOperator.EqualTo;
             condition.ComparisonValue = 1;
