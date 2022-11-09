@@ -30,17 +30,8 @@ namespace SpellConstruction
 
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
-            // Get eligible spellbooks
-            foreach (var leveledItem in state.LoadOrder.PriorityOrder.LeveledItem().WinningContextOverrides())
-            {
-                GetLeveledItems(state, leveledItem.Record);
-            }
-
-            Console.WriteLine("Eligible spellbooks:");
-            foreach (var spellbook in _spellbooks.Select(x => $"{x.FormKey.ModKey} - {x.EditorID}").OrderBy(x => x))
-            {
-                Console.WriteLine(spellbook);
-            }
+            Console.WriteLine("Getting eligible spell tomes...");
+            GetEligibleSpellTomes(state);
 
             ResetAspectCounts(state);
 
@@ -89,6 +80,37 @@ namespace SpellConstruction
             foreach (var aspectCount in _aspectCounts)
             {
                 Console.WriteLine($"{aspectCount.Key}: {aspectCount.Value}");
+            }
+        }
+
+        public static void GetEligibleSpellTomes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
+        {
+            if (_settings.Value.FilterSpellTomesByLeveledList)
+            {
+                foreach (var leveledItem in state.LoadOrder.PriorityOrder.LeveledItem().WinningContextOverrides())
+                {
+                    GetLeveledItems(state, leveledItem.Record);
+                }
+            }
+            else
+            {
+                foreach (var book in state.LoadOrder.PriorityOrder.Book().WinningContextOverrides())
+                {
+                    if (book.Record.Teaches is BookSpell)
+                    {
+                        _spellbooks.Add(book.Record);
+                    }
+                }
+            }
+
+            _spellbooks = SpellTomeFilters.FilterModExclusions(state, _settings.Value.ModExclusion, _spellbooks);
+            _spellbooks = SpellTomeFilters.FilterSpellTomeExclusions(state, _settings.Value.SpellTomeExclusion, _spellbooks);
+            _spellbooks = SpellTomeFilters.AddSpellTomeInclusions(state, _settings.Value.SpellTomeInclusion, _spellbooks);
+
+            Console.WriteLine("Eligible spell tomes:");
+            foreach (var spellbook in _spellbooks.Select(x => $"{x.FormKey.ModKey}:{x.FormKey.ID.ToString("X8")} - {x.EditorID}").OrderBy(x => x))
+            {
+                Console.WriteLine(spellbook);
             }
         }
 

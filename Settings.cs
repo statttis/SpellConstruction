@@ -4,6 +4,14 @@ namespace SpellConstruction
 {
     internal class Settings
     {
+        [SettingName("Limit constructible spell tomes to those that appear at vendors or in loot")]
+        public bool FilterSpellTomesByLeveledList { get; set; } = false;
+        [SettingName("Spell tomes to exclude ([mod name]:[form id], separated by | e.g. MyMod.esp:00001D8A|MyMod.esp:00001D8C)")]
+        public string SpellTomeExclusion { get; set; } = "";
+        [SettingName("Mods to exclude spell tomes from (separated by | e.g. MyMod1.esp|MyMod2.esp)")]
+        public string ModExclusion { get; set; } = "Magic of the Magna-Ge.esp";
+        [SettingName("Spell tomes to include, overriding any limits/exclusions ([mod name]:[form id], separated by | e.g. MyMod.esp:00001D8A|MyMod.esp:00001D8C)")]
+        public string SpellTomeInclusion { get; set; } = "Skyrim.esm:000F4997";
         [SettingName("Required number of aspects for novice spells")]
         public int NoviceAspects { get; set; } = 3;
         [SettingName("Required number of aspects for apprentice spells")]
