@@ -12,13 +12,17 @@ namespace SpellConstruction
         public string ModExclusion { get; set; } = "Magic of the Magna-Ge.esp";
         [SettingName("Spell tomes to include, overriding any limits/exclusions ([mod name]:[form id], separated by | e.g. MyMod.esp:00001D8A|MyMod.esp:00001D8C)")]
         public string SpellTomeInclusion { get; set; } = "ccBGSSSE002-ExoticArrows.esl:00000816|ccBGSSSE002-ExoticArrows.esl:0000082B|ccbgssse014-spellpack01.esl:00000815|ccbgssse014-spellpack01.esl:00000816|ccbgssse014-spellpack01.esl:00000817|ccbgssse014-spellpack01.esl:00000818|ccbgssse014-spellpack01.esl:00000861|ccbgssse014-spellpack01.esl:00000862|ccbgssse014-spellpack01.esl:00000863|ccbgssse014-spellpack01.esl:00000864|ccbgssse014-spellpack01.esl:00000865|ccbgssse014-spellpack01.esl:00000866|ccbgssse014-spellpack01.esl:00000867|ccbgssse014-spellpack01.esl:00000868|ccbgssse014-spellpack01.esl:00000869|ccbgssse014-spellpack01.esl:0000086A|ccbgssse014-spellpack01.esl:0000086B|ccbgssse014-spellpack01.esl:0000086C|ccBGSSSE067-DaedInv.esm:00000B64|ccBGSSSE067-DaedInv.esm:00147D93|ccKRTSSE001_Altar.esl:00000CE1|Dwarfsphere.esp:00A68B94|Dwarfsphere.esp:00A68B98|Dwarfsphere.esp:00A68B9E|Dwarfsphere.esp:00B62BC8|HeartOfTheReach.esp:00096175|Requiem - Magic Redone.esp:00005C04|Skyrim.esm:000F4997|Dawnguard.esm:000045B0|Dawnguard.esm:000045B1|Dawnguard.esm:000045B2";
+        [SettingName("Multiplier on required aspects for spells that are 'rare' - not easily purchased/found")]
+        public double RareSpellTomeMultiplier { get; set; } = 1.5;
+        [SettingName("Spell tomes that are considered rare ([mod name]:[form id], separated by | e.g. MyMod.esp:00001D8A|MyMod.esp:00001D8C)")]
+        public string RareSpellTomes { get; set; } = "ccbgssse014-spellpack01.esl:00000815|ccbgssse014-spellpack01.esl:00000816|ccbgssse014-spellpack01.esl:00000817|ccbgssse014-spellpack01.esl:00000818|ccbgssse014-spellpack01.esl:00000861|ccbgssse014-spellpack01.esl:00000862|ccbgssse014-spellpack01.esl:00000863|ccbgssse014-spellpack01.esl:00000864|ccbgssse014-spellpack01.esl:00000865|ccbgssse014-spellpack01.esl:00000866|ccbgssse014-spellpack01.esl:00000867|ccbgssse014-spellpack01.esl:00000868|ccbgssse014-spellpack01.esl:00000869|ccbgssse014-spellpack01.esl:0000086A|ccbgssse014-spellpack01.esl:0000086B|ccbgssse014-spellpack01.esl:0000086C|ccBGSSSE067-DaedInv.esm:00000B64|ccBGSSSE067-DaedInv.esm:00147D93|Dwarfsphere.esp:00A68B94|Dwarfsphere.esp:00A68B98|Dwarfsphere.esp:00A68B9E|Dwarfsphere.esp:00B62BC8|HeartOfTheReach.esp:00096175|Requiem - Magic Redone.esp:00005C04|Skyrim.esm:000F4997|Dawnguard.esm:000045B0|Dawnguard.esm:000045B1|Dawnguard.esm:000045B2";
         [SettingName("Required number of aspects for novice spells")]
         public int NoviceAspects { get; set; } = 3;
         [SettingName("Required number of aspects for apprentice spells")]
         public int ApprenticeAspects { get; set; } = 5;
         [SettingName("Required number of aspects for adept spells")]
         public int AdeptAspects { get; set; } = 8;
-        [SettingName("Required number of aspects for expect spells")]
+        [SettingName("Required number of aspects for expert spells")]
         public int ExpertAspects { get; set; } = 13;
         [SettingName("Required number of aspects for master spells")]
         public int MasterAspects { get; set; } = 21;

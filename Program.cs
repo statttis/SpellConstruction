@@ -17,6 +17,7 @@ namespace SpellConstruction
         private static HashSet<FormKey> _searchedLeveledLists = new HashSet<FormKey>();
         private static HashSet<FormKey> _leveledListsWithSpellbooks = new HashSet<FormKey>();
         private static HashSet<IBookGetter> _spellbooks = new HashSet<IBookGetter>();
+        private static HashSet<IBookGetter> _rareSpellbooks = new HashSet<IBookGetter>();
 
         public static async Task<int> Main(string[] args)
         {
@@ -32,6 +33,8 @@ namespace SpellConstruction
         {
             Console.WriteLine("Getting eligible spell tomes...");
             GetEligibleSpellTomes(state);
+
+            _rareSpellbooks = SpellTomeFilters.ParseSpellTomes(state, _settings.Value.RareSpellTomes).ToHashSet();
 
             ResetAspectCounts(state);
 
@@ -422,6 +425,12 @@ namespace SpellConstruction
             constructions.Add(new ConstructionCount { Construction = GetTargetTypeConstruction(spell.TargetType), Count = 1 });
 
             var (requiredAspects, requiredUniqueAspects) = GetRequiredAspectCount(expertise);
+
+            if (_rareSpellbooks.Contains(book))
+            {
+                requiredAspects = (int)(requiredAspects * _settings.Value.RareSpellTomeMultiplier);
+            }
+
             constructions.AddRange(GetAspectConstructions(state, spell.Effects, requiredAspects, requiredUniqueAspects, $"{spell.FormKey.ModKey} - {spell.EditorID}"));
 
             return constructions;

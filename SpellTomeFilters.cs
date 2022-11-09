@@ -29,7 +29,7 @@ namespace SpellConstruction
             return spellTomes.Concat(ParseSpellTomes(state, inclusions)).ToHashSet();
         }
 
-        private static IEnumerable<IBookGetter> ParseSpellTomes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, string spellTomePairs)
+        public static IEnumerable<IBookGetter> ParseSpellTomes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, string spellTomePairs)
         {
             if (string.IsNullOrWhiteSpace(spellTomePairs))
             {
