@@ -10,7 +10,7 @@ namespace SpellConstruction
     {
         public static HashSet<IBookGetter> FilterSpellTomeExclusions(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, string exclusions, HashSet<IBookGetter> spellTomes)
         {
-            return spellTomes.Except(ParseSpellTomes(state, exclusions)).ToHashSet();
+            return spellTomes.ExceptBy(ParseSpellTomes(state, exclusions).Select(x => x.FormKey), x => x.FormKey).ToHashSet();
         }
 
         public static HashSet<IBookGetter> FilterModExclusions(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, string exclusions, HashSet<IBookGetter> spellTomes)
