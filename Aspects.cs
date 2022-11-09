@@ -87,13 +87,13 @@ namespace SpellConstruction
                 Book = SCMod.Book.SCConstructionAspectUndead,
                 Keywords = { Skyrim.Keyword.MagicSummonUndead, Skyrim.Keyword.MagicTurnUndead },
                 Archetypes = { MagicEffectArchetype.TypeEnum.TurnUndead, MagicEffectArchetype.TypeEnum.Reanimate },
-                Phrases = { "undead", "reanim", "skeleton", "zombie", "corpse", "vampir" },
+                Phrases = { "undead", "reanim", "skeleton", "zombie", "corpse", "vampir", "lich", "bone" },
             },
             new Aspect
             {
                 Book = SCMod.Book.SCConstructionAspectDaedra,
                 Archetypes = { MagicEffectArchetype.TypeEnum.Banish },
-                Phrases = { "daedr", "oblivion", "dremora", "scamp", "atronach", "saint", "seducer" },
+                Phrases = { "daedr", "oblivion", "dremora", "scamp", "atronach", "saint", "seducer", "auroran", "lurker", "seeker" },
             },
             new Aspect
             {
@@ -119,14 +119,14 @@ namespace SpellConstruction
             {
                 Book = SCMod.Book.SCConstructionAspectLight,
                 Archetypes = { MagicEffectArchetype.TypeEnum.Light },
-                Phrases = { "light", "sun", "lumin", "radia", "shin" },
+                Phrases = { "light", "sun", "lumin", "radia", "shin", "lumin" },
             },
             new Aspect
             {
                 Book = SCMod.Book.SCConstructionAspectDark,
                 Keywords = { Skyrim.Keyword.MagicNightEye },
                 ActorValues = { ActorValue.NightEye },
-                Phrases = { "dark", "night", "moon", "dusk", "black" },
+                Phrases = { "dark", "night", "moon", "dusk", "black", "umbra" },
             },
             new Aspect
             {
@@ -139,7 +139,7 @@ namespace SpellConstruction
             {
                 Book = SCMod.Book.SCConstructionAspectWater,
                 ActorValues = { ActorValue.WaterBreathing, ActorValue.WaterWalking },
-                Phrases = { "water", "wet", "sea", "lake", "river", "ocean", "liquid", "swim" },
+                Phrases = { "water", "wet", "sea", "lake", "river", "ocean", "liquid", "swim", "aqua" },
             },
             new Aspect
             {
@@ -206,7 +206,7 @@ namespace SpellConstruction
             new Aspect
             {
                 Book = SCMod.Book.SCConstructionAspectEarth,
-                Phrases = { "natur", "wild", "earth", "ston", "soil", "rock", "plant", "terra", "environ" },
+                Phrases = { "natur", "wild", "earth", "ston", "soil", "rock", "plant", "terra", "environ", "mineral", "swamp", "ore" },
             },
             new Aspect
             {
@@ -284,7 +284,7 @@ namespace SpellConstruction
             {
                 Book = SCMod.Book.SCConstructionAspectBind,
                 Archetypes = { MagicEffectArchetype.TypeEnum.Bound },
-                Phrases = { "bound", "bind", "enslav" },
+                Phrases = { "bound", "bind", "enslav", "thrall" },
             },
             new Aspect
             {
