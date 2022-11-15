@@ -267,12 +267,16 @@ namespace SpellConstruction
                         continue;
                     }
 
+                    bool requireEffectKnown = true;
                     FormLink<IBookGetter> targetConstruction;
                     switch (weapon.Record.Data.AnimationType)
                     {
                         case WeaponAnimationType.Bow:
                         case WeaponAnimationType.Crossbow:
+                            targetConstruction = SCMod.Book.SCConstructionTarget;
+                            break;
                         case WeaponAnimationType.Staff:
+                            requireEffectKnown = false;
                             targetConstruction = SCMod.Book.SCConstructionTarget;
                             break;
                         default:
@@ -287,7 +291,10 @@ namespace SpellConstruction
                         var recipe = GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"WeaponConstruction{i}{weapon.Record.EditorID}");
                         recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(weapon.Record) } });
                         recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(weapon.Record)));
-                        recipe.Conditions.Add(GetObjectEffectKnownCondition(weapon.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
+                        if (requireEffectKnown)
+                        {
+                            recipe.Conditions.Add(GetObjectEffectKnownCondition(weapon.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
+                        }
                     }
 
                     count++;
