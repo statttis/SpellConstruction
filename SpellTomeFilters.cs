@@ -26,7 +26,7 @@ namespace SpellConstruction
 
         public static HashSet<IBookGetter> AddSpellTomeInclusions(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, string inclusions, HashSet<IBookGetter> spellTomes)
         {
-            return spellTomes.Concat(ParseSpellTomes(state, inclusions)).ToHashSet();
+            return spellTomes.UnionBy(ParseSpellTomes(state, inclusions), x => x.FormKey).ToHashSet();
         }
 
         public static IEnumerable<IBookGetter> ParseSpellTomes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, string spellTomePairs)
