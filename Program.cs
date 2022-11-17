@@ -130,19 +130,23 @@ namespace SpellConstruction
                         continue;
                     }
 
-                    var recipe = GenerateBaseRecipe(state, book, book.EditorID);
+                    var recipe = Conditions.GenerateBaseRecipe(state, book, book.EditorID);
 
                     var spell = (book.Teaches as BookSpell).Spell.Resolve(state.LinkCache);
                     var (school, expertise) = GetSchoolAndExpertise(spell.HalfCostPerk);
 
-                    SetSkillLevelCondition(recipe, school, expertise);
+                    Conditions.SetSkillLevelCondition(recipe, school, expertise,
+                        _settings.Value.TomesAvailableApprentice, _settings.Value.TomesAvailableAdept, _settings.Value.TomesAvailableExpert, _settings.Value.TomesAvailableMaster);
 
-                    SetRitualQuestCondition(recipe, school, expertise);
+                    if (_settings.Value.MasterTomesRequireRitualQuest)
+                    {
+                        Conditions.SetRitualQuestCondition(recipe, school, expertise);
+                    }
                     
                     foreach (var constructionCount in constructionCounts)
                     {
                         recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = constructionCount.Count, Item = constructionCount.Construction } });
-                        recipe.Conditions.Add(GetRequiredCountCondition(constructionCount.Construction));
+                        recipe.Conditions.Add(Conditions.GetRequiredCountCondition(constructionCount.Construction));
                     }
 
                     count++;
@@ -167,10 +171,10 @@ namespace SpellConstruction
 
                     for (int i = 0; i < constructionCounts.Count(); i++)
                     {
-                        var recipe = GenerateBaseRecipe(state, constructionCounts.ElementAt(i).Construction.Resolve(state.LinkCache), $"SpellbookConstruction{i}{book.Record.EditorID}");
+                        var recipe = Conditions.GenerateBaseRecipe(state, constructionCounts.ElementAt(i).Construction.Resolve(state.LinkCache), $"SpellbookConstruction{i}{book.Record.EditorID}");
                         recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IBookGetter>(book.Record) } });
-                        recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(book.Record)));
-                        recipe.Conditions.Add(GetSpellKnownCondition((book.Record.Teaches as BookSpell).Spell));
+                        recipe.Conditions.Add(Conditions.GetRequiredCountCondition(new FormLink<IItemGetter>(book.Record)));
+                        recipe.Conditions.Add(Conditions.GetSpellKnownCondition((book.Record.Teaches as BookSpell).Spell));
                     }
 
                     count++;
@@ -205,10 +209,10 @@ namespace SpellConstruction
 
                     for (int i = 0; i < constructions.Count(); i++)
                     {
-                        var recipe = GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"ArmorConstruction{i}{armor.Record.EditorID}");
+                        var recipe = Conditions.GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"ArmorConstruction{i}{armor.Record.EditorID}");
                         recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(armor.Record) } });
-                        recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(armor.Record)));
-                        recipe.Conditions.Add(GetObjectEffectKnownCondition(armor.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
+                        recipe.Conditions.Add(Conditions.GetRequiredCountCondition(new FormLink<IItemGetter>(armor.Record)));
+                        recipe.Conditions.Add(Conditions.GetObjectEffectKnownCondition(armor.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
                     }
 
                     count++;
@@ -235,9 +239,9 @@ namespace SpellConstruction
 
                 for (int i = 0; i < constructions.Count(); i++)
                 {
-                    var recipe = GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"ScrollConstruction{i}{scroll.Record.EditorID}");
+                    var recipe = Conditions.GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"ScrollConstruction{i}{scroll.Record.EditorID}");
                     recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(scroll.Record) } });
-                    recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(scroll.Record)));
+                    recipe.Conditions.Add(Conditions.GetRequiredCountCondition(new FormLink<IItemGetter>(scroll.Record)));
                 }
 
                 count++;
@@ -288,12 +292,12 @@ namespace SpellConstruction
 
                     for (int i = 0; i < constructions.Count(); i++)
                     {
-                        var recipe = GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"WeaponConstruction{i}{weapon.Record.EditorID}");
+                        var recipe = Conditions.GenerateBaseRecipe(state, constructions.ElementAt(i).Construction.Resolve(state.LinkCache), $"WeaponConstruction{i}{weapon.Record.EditorID}");
                         recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(weapon.Record) } });
-                        recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(weapon.Record)));
+                        recipe.Conditions.Add(Conditions.GetRequiredCountCondition(new FormLink<IItemGetter>(weapon.Record)));
                         if (requireEffectKnown)
                         {
-                            recipe.Conditions.Add(GetObjectEffectKnownCondition(weapon.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
+                            recipe.Conditions.Add(Conditions.GetObjectEffectKnownCondition(weapon.Record.ObjectEffect.Resolve<IObjectEffectGetter>(state.LinkCache)));
                         }
                     }
 
@@ -361,10 +365,10 @@ namespace SpellConstruction
                     var construction = GetAspectConstructions(state, new List<IEffectGetter>() { ingredient.Record.Effects[i] }, 1, 1,
                         $"{ingredient.Record.FormKey.ModKey} - {ingredient.Record.EditorID}").First().Construction;
                     var requiredCount = Math.Max(Math.Min((int)(_settings.Value.IngredientRequiredValue / Math.Max(GetItemValue(ingredient.Record), 1)), _settings.Value.IngredientMaximumQuantity), _settings.Value.IngredientMinimumQuantity);
-                    var recipe = GenerateBaseRecipe(state, construction.Resolve(state.LinkCache), $"Ingredient{i}{ingredient.Record.EditorID}");
+                    var recipe = Conditions.GenerateBaseRecipe(state, construction.Resolve(state.LinkCache), $"Ingredient{i}{ingredient.Record.EditorID}");
                     recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = requiredCount, Item = ingredient.Record.ToLink<IItemGetter>() } });
-                    recipe.Conditions.Add(GetRequiredCountCondition(ingredient.Record.ToLink<IItemGetter>()));
-                    recipe.Conditions.Add(GetEffectKnownCondition(ingredient.Record, i));
+                    recipe.Conditions.Add(Conditions.GetRequiredCountCondition(ingredient.Record.ToLink<IItemGetter>()));
+                    recipe.Conditions.Add(Conditions.GetEffectKnownCondition(ingredient.Record, i));
                 }
 
                 count++;
@@ -407,9 +411,9 @@ namespace SpellConstruction
             foreach (var item in items)
             {
                 var count = Math.Max(Math.Min((int)(requiredValue / Math.Max(GetItemValue(item.Resolve(state.LinkCache)), 1)), maximumCount), minimumCount);
-                var recipe = GenerateBaseRecipe(state, construction.Resolve(state.LinkCache), $"Material{item.Resolve(state.LinkCache).EditorID}");
+                var recipe = Conditions.GenerateBaseRecipe(state, construction.Resolve(state.LinkCache), $"Material{item.Resolve(state.LinkCache).EditorID}");
                 recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = count, Item = item } });
-                recipe.Conditions.Add(GetRequiredCountCondition(item));
+                recipe.Conditions.Add(Conditions.GetRequiredCountCondition(item));
             }
         }
 
@@ -510,111 +514,6 @@ namespace SpellConstruction
                 default:
                     throw new Exception($"Unexpected skill: {school}");
             }
-        }
-
-        public static ConditionFloat GetRequiredCountCondition(IFormLink<IItemGetter> item, int quantity = 1)
-        {
-            var condition = new ConditionFloat();
-            condition.CompareOperator = CompareOperator.GreaterThanOrEqualTo;
-            condition.ComparisonValue = quantity;
-            var data = new FunctionConditionData();
-            data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.GetItemCount;
-            data.ParameterOneRecord = item;
-            condition.Data = data;
-            return condition;
-        }
-
-        public static ConditionFloat GetSpellKnownCondition(IFormLink<ISpellGetter> spell)
-        {
-            var condition = new ConditionFloat();
-            condition.CompareOperator = CompareOperator.EqualTo;
-            condition.ComparisonValue = 1;
-            var data = new FunctionConditionData();
-            data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.HasSpell;
-            data.ParameterOneRecord = spell;
-            condition.Data = data;
-            return condition;
-        }
-
-        public static void SetSkillLevelCondition(ConstructibleObject recipe, Skill skill, SkillLevel skillLevel)
-        {
-            int requiredSkill = 0;
-            switch (skillLevel)
-            {
-                case SkillLevel.Novice:
-                    return;
-                case SkillLevel.Apprentice:
-                    requiredSkill = _settings.Value.TomesAvailableApprentice;
-                    break;
-                case SkillLevel.Adept:
-                    requiredSkill = _settings.Value.TomesAvailableAdept;
-                    break;
-                case SkillLevel.Expert:
-                    requiredSkill = _settings.Value.TomesAvailableExpert;
-                    break;
-                case SkillLevel.Master:
-                    requiredSkill = _settings.Value.TomesAvailableMaster;
-                    break;
-            }
-
-            var condition = new ConditionFloat();
-            condition.CompareOperator = CompareOperator.GreaterThanOrEqualTo;
-            condition.ComparisonValue = requiredSkill;
-            var data = new FunctionConditionData();
-            data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.GetActorValue;
-            data.ParameterOneNumber = (int)skill;
-            condition.Data = data;
-
-            recipe.Conditions.Add(condition);
-        }
-
-        public static void SetRitualQuestCondition(ConstructibleObject recipe, Skill skill, SkillLevel skillLevel)
-        {
-            if (!_settings.Value.MasterTomesRequireRitualQuest)
-            {
-                return;
-            }
-
-            if (skillLevel != SkillLevel.Master)
-            {
-                return;
-            }
-
-            IFormLink<IGlobalGetter> questCompletedGlobal;
-            switch (skill)
-            {
-                case Skill.Alteration:
-                    questCompletedGlobal = Skyrim.Global.MGRitualAltBook;
-                    break;
-                case Skill.Conjuration:
-                    questCompletedGlobal = Skyrim.Global.MGRitualConjBook;
-                    break;
-                case Skill.Destruction:
-                    questCompletedGlobal = Skyrim.Global.MGRitualDestBook;
-                    break;
-                case Skill.Illusion:
-                    questCompletedGlobal = Skyrim.Global.MGRitualIllBook;
-                    break;
-                case Skill.Restoration:
-                    questCompletedGlobal = Skyrim.Global.MGRitualRestBook;
-                    break;
-                default:
-                    return;
-            }
-
-            var condition = new ConditionFloat();
-            condition.CompareOperator = CompareOperator.EqualTo;
-            condition.ComparisonValue = 0;
-            var data = new FunctionConditionData();
-            data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.GetGlobalValue;
-            data.ParameterOneRecord = questCompletedGlobal;
-            condition.Data = data;
-
-            recipe.Conditions.Add(condition);
         }
 
         public static (Skill, SkillLevel) GetSchoolAndExpertise(IFormLinkGetter<IPerkGetter> halfCostPerk)
@@ -749,9 +648,9 @@ namespace SpellConstruction
 
         public static void GenerateSkillBookSchoolConstructionRecipe(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, IBookGetter book, Skill skill)
         {
-            var recipe = GenerateBaseRecipe(state, GetSchoolConstruction(skill).Resolve(state.LinkCache), $"SkillBookSchool{book.EditorID}");
+            var recipe = Conditions.GenerateBaseRecipe(state, GetSchoolConstruction(skill).Resolve(state.LinkCache), $"SkillBookSchool{book.EditorID}");
             recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(book) } });
-            recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(book)));
+            recipe.Conditions.Add(Conditions.GetRequiredCountCondition(new FormLink<IItemGetter>(book)));
         }
 
         public static void GenerateSkillBookAspectConstructionRecipes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, IBookGetter book, int requiredAspects)
@@ -761,79 +660,11 @@ namespace SpellConstruction
             foreach (var aspect in aspects)
             {
                 var construction = aspect.Book.Resolve(state.LinkCache);
-                var recipe = GenerateBaseRecipe(state, construction, $"SkillBookAspect{construction.EditorID}{book.EditorID}");
+                var recipe = Conditions.GenerateBaseRecipe(state, construction, $"SkillBookAspect{construction.EditorID}{book.EditorID}");
                 recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = new FormLink<IItemGetter>(book) } });
-                recipe.Conditions.Add(GetRequiredCountCondition(new FormLink<IItemGetter>(book)));
+                recipe.Conditions.Add(Conditions.GetRequiredCountCondition(new FormLink<IItemGetter>(book)));
                 _aspectCounts[aspect.Book.Resolve(state.LinkCache).EditorID] += 1;
             }
-        }
-
-        public static ConditionFloat GetObjectEffectKnownCondition(IObjectEffectGetter enchantment)
-        {
-            IFormLink<IEffectRecordGetter> effect;
-            if (!enchantment.BaseEnchantment.IsNull)
-            {
-                effect = enchantment.BaseEnchantment.Cast<IEffectRecordGetter>();
-            }
-            else
-            {
-                effect = enchantment.ToLink();
-            }
-
-            var condition = new ConditionFloat();
-            condition.CompareOperator = CompareOperator.EqualTo;
-            condition.ComparisonValue = 1;
-            var data = new FunctionConditionData();
-            data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.PlayerKnows;
-            data.ParameterOneRecord = effect;
-            condition.Data = data;
-            return condition;
-        }
-
-        public static ConditionFloat GetEffectKnownCondition(IIngredientGetter ingredient, int effectIndex)
-        {
-            IFormLink<IPlacedObjectGetter> container;
-            switch (effectIndex)
-            {
-                case 0:
-                    container = SCMod.PlacedObject.SC1stEffectKnownContainer;
-                    break;
-                case 1:
-                    container = SCMod.PlacedObject.SC2ndEffectKnownContainer;
-                    break;
-                case 2:
-                    container = SCMod.PlacedObject.SC3rdEffectKnownContainer;
-                    break;
-                case 3:
-                    container = SCMod.PlacedObject.SC4thEffectKnownContainer;
-                    break;
-                default:
-                    Console.WriteLine($"Unexpected index of effects ({effectIndex}) on ingredient {ingredient.FormKey.ModKey} - {ingredient.EditorID}");
-                    return null;
-            }
-
-            var condition = new ConditionFloat();
-            condition.CompareOperator = CompareOperator.GreaterThanOrEqualTo;
-            condition.ComparisonValue = 1;
-            var data = new FunctionConditionData();
-            data.RunOnType = Condition.RunOnType.Reference;
-            data.Function = Condition.Function.GetItemCount;
-            data.ParameterOneRecord = ingredient.ToLink();
-            data.Reference = container;
-            condition.Data = data;
-            return condition;
-        }
-
-        public static ConstructibleObject GenerateBaseRecipe(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, IConstructibleGetter construction, string editorId)
-        {
-            var recipe = state.PatchMod.ConstructibleObjects.AddNew();
-            recipe.EditorID = $"SCRecipe{editorId}";
-            recipe.WorkbenchKeyword = SCMod.Keyword.SCCraftingSpellbook.AsNullable();
-            recipe.CreatedObjectCount = 1;
-            recipe.CreatedObject = construction.ToNullableLink();
-            recipe.Items = new Noggog.ExtendedList<ContainerEntry>();
-            return recipe;
         }
 
         public static (int, int) GetRequiredAspectCount(SkillLevel skillLevel)
@@ -1076,15 +907,6 @@ namespace SpellConstruction
         {
             public IFormLink<IBookGetter> Construction { get; set; }
             public int Count { get; set; }
-        }
-
-        public enum SkillLevel
-        {
-            Novice,
-            Apprentice,
-            Adept,
-            Expert,
-            Master
         }
 
         public static void GetLeveledItems(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, ILeveledItemGetter leveledItem)
