@@ -3,11 +3,6 @@ using Mutagen.Bethesda.FormKeys.SkyrimSE;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SCMod = Mutagen.Bethesda.FormKeys.SkyrimSE.SpellConstruction;
 
 namespace SpellConstruction
@@ -149,8 +144,7 @@ namespace SpellConstruction
             recipe.Conditions.Add(condition);
         }
 
-        public static void SetSkillLevelCondition(ConstructibleObject recipe, Skill skill, SkillLevel skillLevel,
-            int tomesAvailableApprentice, int tomesAvailableAdept, int tomesAvailableExpert, int tomesAvailableMaster)
+        public static void SetSkillLevelCondition(Settings settings, ConstructibleObject recipe, Skill skill, SkillLevel skillLevel)
         {
             int requiredSkill = 0;
             switch (skillLevel)
@@ -158,16 +152,16 @@ namespace SpellConstruction
                 case SkillLevel.Novice:
                     return;
                 case SkillLevel.Apprentice:
-                    requiredSkill = tomesAvailableApprentice;
+                    requiredSkill = settings.TomesAvailableApprentice;
                     break;
                 case SkillLevel.Adept:
-                    requiredSkill = tomesAvailableAdept;
+                    requiredSkill = settings.TomesAvailableAdept;
                     break;
                 case SkillLevel.Expert:
-                    requiredSkill = tomesAvailableExpert;
+                    requiredSkill = settings.TomesAvailableExpert;
                     break;
                 case SkillLevel.Master:
-                    requiredSkill = tomesAvailableMaster;
+                    requiredSkill = settings.TomesAvailableMaster;
                     break;
             }
 
