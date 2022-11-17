@@ -13,5 +13,6 @@ namespace SpellConstruction
         public IFormLink<IBookGetter> Book { get; set; }
 
         public List<IFormLink<IItemGetter>> Materials { get; set; } = new List<IFormLink<IItemGetter>>();
+        public List<IFormLink<IItemGetter>> Aspects { get; set; } = new List<IFormLink<IItemGetter>>();
     }
 }

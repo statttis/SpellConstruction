@@ -65,12 +65,8 @@ namespace SpellConstruction
             Console.WriteLine("Generating gem breakdown recipes...");
             GenerateGemConstructionRecipes(state);
 
-            Console.WriteLine("Generating fundamental recipes...");
-            GenerateFundamentalRecipes(state);
-
-            Console.WriteLine("Generating intention recipes...");
-
-            Console.WriteLine("Generating method recipes...");
+            Console.WriteLine("Generating aspect conversion recipes...");
+            GenerateAspectConversionRecipes(state);
 
             PrintAspectCounts();
         }
@@ -411,19 +407,23 @@ namespace SpellConstruction
             Console.WriteLine($"Breakdown recipes generated for {count} ingots");
         }
 
-        public static void GenerateFundamentalRecipes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
+        public static void GenerateAspectConversionRecipes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
+            int count = 0;
+            foreach (var material in Materials.Fundamentals.Concat(Materials.Intentions).Concat(Materials.Methods))
+            {
+                var book = material.Book.Resolve(state.LinkCache);
+                var recipe = Conditions.GenerateBaseRecipe(state, book, book.EditorID);
+                foreach (var aspect in material.Aspects)
+                {
+                    recipe.Items.Add(new ContainerEntry { Item = new ContainerItem { Count = 1, Item = aspect } });
+                    recipe.Conditions.Add(Conditions.GetRequiredCountCondition(aspect));
+                }
 
-        }
+                count++;
+            }
 
-        public static void GenerateIntentionRecipes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
-        {
-
-        }
-
-        public static void GenerateMethodRecipes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
-        {
-
+            Console.WriteLine($"Recipes generated for {count} aspect conversions");
         }
 
         public static void GenerateItemConstructionRecipes(IPatcherState<ISkyrimMod, ISkyrimModGetter> state, IFormLink<IBookGetter> construction,
