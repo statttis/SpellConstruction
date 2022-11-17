@@ -171,7 +171,7 @@ namespace SpellConstruction
                 case SkillLevel.Master:
                     return (settings.MasterAspects, settings.MasterUniqueAspects);
                 default:
-                    throw new Exception($"Unexpected SkillLeve: {skillLevel}");
+                    throw new Exception($"Unexpected SkillLevel: {skillLevel}");
             }
         }
     }
