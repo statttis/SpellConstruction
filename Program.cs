@@ -384,8 +384,8 @@ namespace SpellConstruction
             int count = 0;
             foreach (var intention in Materials.Intentions.Concat(Materials.Methods))
             {
-                GenerateItemConstructionRecipes(state, intention.Book, intention.Materials, _settings.Value.IntentionMethodRequiredValue,
-                    _settings.Value.IntentionMethodMaximumQuantity, _settings.Value.IntentionMethodMinimumQuantity);
+                GenerateItemConstructionRecipes(state, intention.Book, intention.Materials, _settings.Value.IntentMethodRequiredValue,
+                    _settings.Value.IntentMethodMaximumQuantity, _settings.Value.IntentMethodMinimumQuantity);
 
                 count++;
             }
