@@ -10,10 +10,10 @@ public static partial class SpellConstruction
     public static class PlacedObject
     {
         private static FormLink<IPlacedObjectGetter> Construct(uint id) => new FormLink<IPlacedObjectGetter>(ModKey.MakeFormKey(id));
-        public static FormLink<IPlacedObjectGetter> SC4thEffectKnownContainer => Construct(0x2dfb);
-        public static FormLink<IPlacedObjectGetter> SC3rdEffectKnownContainer => Construct(0x2dfe);
-        public static FormLink<IPlacedObjectGetter> SC2ndEffectKnownContainer => Construct(0x2dfc);
-        public static FormLink<IPlacedObjectGetter> SC1stEffectKnownContainer => Construct(0x2dfd);
-        public static FormLink<IPlacedObjectGetter> SCWorkbenchWorld => Construct(0x1866);
+        public static FormLink<IPlacedObjectGetter> SCWorkbenchWorld => Construct(0x803);
+        public static FormLink<IPlacedObjectGetter> SC4thEffectKnownContainer => Construct(0x806);
+        public static FormLink<IPlacedObjectGetter> SC2ndEffectKnownContainer => Construct(0x807);
+        public static FormLink<IPlacedObjectGetter> SC1stEffectKnownContainer => Construct(0x808);
+        public static FormLink<IPlacedObjectGetter> SC3rdEffectKnownContainer => Construct(0x809);
     }
 }

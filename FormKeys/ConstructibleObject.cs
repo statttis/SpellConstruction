@@ -10,6 +10,6 @@ public static partial class SpellConstruction
     public static class ConstructibleObject
     {
         private static FormLink<IConstructibleObjectGetter> Construct(uint id) => new FormLink<IConstructibleObjectGetter>(ModKey.MakeFormKey(id));
-        public static FormLink<IConstructibleObjectGetter> SCRecipeSpellbook => Construct(0x3363);
+        public static FormLink<IConstructibleObjectGetter> SCRecipeSpellbook => Construct(0x80c);
     }
 }

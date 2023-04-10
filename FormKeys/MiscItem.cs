@@ -10,7 +10,7 @@ public static partial class SpellConstruction
     public static class MiscItem
     {
         private static FormLink<IMiscItemGetter> Construct(uint id) => new FormLink<IMiscItemGetter>(ModKey.MakeFormKey(id));
-        public static FormLink<IMiscItemGetter> SCSpellbookMisc => Construct(0x3362);
-        public static FormLink<IMiscItemGetter> SCCraftingReset => Construct(0x2dff);
+        public static FormLink<IMiscItemGetter> SCCraftingReset => Construct(0x80a);
+        public static FormLink<IMiscItemGetter> SCSpellbookMisc => Construct(0x80b);
     }
 }

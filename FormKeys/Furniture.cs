@@ -10,6 +10,6 @@ public static partial class SpellConstruction
     public static class Furniture
     {
         private static FormLink<IFurnitureGetter> Construct(uint id) => new FormLink<IFurnitureGetter>(ModKey.MakeFormKey(id));
-        public static FormLink<IFurnitureGetter> SCWorkbench => Construct(0x1864);
+        public static FormLink<IFurnitureGetter> SCWorkbench => Construct(0x801);
     }
 }

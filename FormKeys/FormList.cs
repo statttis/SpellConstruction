@@ -10,6 +10,6 @@ public static partial class SpellConstruction
     public static class FormList
     {
         private static FormLink<IFormListGetter> Construct(uint id) => new FormLink<IFormListGetter>(ModKey.MakeFormKey(id));
-        public static FormLink<IFormListGetter> SCUsableIngredients => Construct(0x2df5);
+        public static FormLink<IFormListGetter> SCUsableIngredients => Construct(0x804);
     }
 }
