@@ -45,10 +45,9 @@ namespace SpellConstruction
             var condition = new ConditionFloat();
             condition.CompareOperator = CompareOperator.GreaterThanOrEqualTo;
             condition.ComparisonValue = 1;
-            var data = new FunctionConditionData();
+            var data = new GetItemCountConditionData();
             data.RunOnType = Condition.RunOnType.Reference;
-            data.Function = Condition.Function.GetItemCount;
-            data.ParameterOneRecord = ingredient.ToLink();
+            data.ItemOrList.Link.SetTo(ingredient);
             data.Reference = container;
             condition.Data = data;
             return condition;
@@ -69,10 +68,9 @@ namespace SpellConstruction
             var condition = new ConditionFloat();
             condition.CompareOperator = CompareOperator.EqualTo;
             condition.ComparisonValue = 1;
-            var data = new FunctionConditionData();
+            var data = new PlayerKnowsConditionData();
+            data.Knowable.Link.SetTo(effect.FormKey);
             data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.PlayerKnows;
-            data.ParameterOneRecord = effect;
             condition.Data = data;
             return condition;
         }
@@ -82,10 +80,9 @@ namespace SpellConstruction
             var condition = new ConditionFloat();
             condition.CompareOperator = CompareOperator.EqualTo;
             condition.ComparisonValue = 1;
-            var data = new FunctionConditionData();
+            var data = new HasSpellConditionData();
             data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.HasSpell;
-            data.ParameterOneRecord = spell;
+            data.Spell.Link.SetTo(spell);
             condition.Data = data;
             return condition;
         }
@@ -95,10 +92,9 @@ namespace SpellConstruction
             var condition = new ConditionFloat();
             condition.CompareOperator = CompareOperator.GreaterThanOrEqualTo;
             condition.ComparisonValue = quantity;
-            var data = new FunctionConditionData();
+            var data = new GetItemCountConditionData();
             data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.GetItemCount;
-            data.ParameterOneRecord = item;
+            data.ItemOrList.Link.SetTo(item.FormKey);
             condition.Data = data;
             return condition;
         }
@@ -135,10 +131,9 @@ namespace SpellConstruction
             var condition = new ConditionFloat();
             condition.CompareOperator = CompareOperator.EqualTo;
             condition.ComparisonValue = 0;
-            var data = new FunctionConditionData();
+            var data = new GetGlobalValueConditionData();
             data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.GetGlobalValue;
-            data.ParameterOneRecord = questCompletedGlobal;
+            data.Global.Link.SetTo(questCompletedGlobal);
             condition.Data = data;
 
             recipe.Conditions.Add(condition);
@@ -168,10 +163,9 @@ namespace SpellConstruction
             var condition = new ConditionFloat();
             condition.CompareOperator = CompareOperator.GreaterThanOrEqualTo;
             condition.ComparisonValue = requiredSkill;
-            var data = new FunctionConditionData();
+            var data = new GetActorValueConditionData();
             data.RunOnType = Condition.RunOnType.Subject;
-            data.Function = Condition.Function.GetActorValue;
-            data.ParameterOneNumber = (int)skill;
+            data.ActorValue = (ActorValue)skill;
             condition.Data = data;
 
             recipe.Conditions.Add(condition);
